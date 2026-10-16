@@ -24,7 +24,7 @@ Close up, your arrow sits below your line of sight, so the crawl does not keep s
 crawl(d) = a − b/d − c·d
 ```
 
-Here `d` is the distance in metres. The fold is at `d = √(b/c)`. Each near distance `d` shares its crawl with a far distance `b / (c·d)`, so one tab line works for both. The key card lists near distances against the far mark they share. That is why the app asks for at least two readings under 15 m.
+Here `d` is the distance in metres. The fold is at `d = √(b/c)`. Each near distance `d` shares its crawl with a far distance `b / (c·d)`, so one tab line works for both. The key card lists near distances against the far mark they share. That is why the app suggests sighting in at a few short distances as well as long ones. Which distances count as near is only decided after sight-in, from where the fitted fold falls.
 
 ## World Archery rules
 

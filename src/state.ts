@@ -21,7 +21,6 @@ export interface AppState {
   minorMarks: number;
 }
 
-export const NEAR_LIMIT = 15;
 export const MINOR_RANGE = { min: 1, max: 10 };
 
 export const defaultState: AppState = {

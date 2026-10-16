@@ -95,7 +95,7 @@ export function Fit({ state, result, readings }: { state: AppState; result: FitR
       </figure>
 
       {fit.rms > 1.5 && <Tip tone="warn">The curve misses some readings by more than a millimetre or two. Check them for typos, or reshoot the odd one out.</Tip>}
-      {fold === null && <Tip tone="warn">Add readings at two or more distances under 15 m.</Tip>}
+      {fold === null && <Tip tone="warn">No turn-back found yet. Add readings at a few shorter distances and fit again.</Tip>}
 
       {pairs.length > 0 && (
         <div className="pairs">

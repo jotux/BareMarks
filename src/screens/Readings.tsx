@@ -1,12 +1,11 @@
 import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import { NextLink, Screen, Tip } from '../components/Screen';
-import { AppState, NEAR_LIMIT, parseNum, readingRows, validReadings } from '../state';
+import { AppState, parseNum, readingRows, validReadings } from '../state';
 
 export function Readings({ state, setState }: { state: AppState; setState: Dispatch<SetStateAction<AppState>> }) {
   const [adding, setAdding] = useState('');
   const rows = readingRows(state);
   const valid = validReadings(state);
-  const nearCount = valid.filter((r) => r.distance < NEAR_LIMIT).length;
 
   const setReading = (d: number, text: string) =>
     setState((s) => ({ ...s, readings: { ...s.readings, [d]: text } }));
@@ -36,10 +35,7 @@ export function Readings({ state, setState }: { state: AppState; setState: Dispa
           const pointOn = r.value === 0;
           return (
             <div className="table-row" key={r.distance}>
-              <span className="distance">
-                {r.distance} m
-                {r.distance < NEAR_LIMIT && <span className="near-tag">Near</span>}
-              </span>
+              <span className="distance">{r.distance} m</span>
               <div>
                 <label className={`field-box compact${r.error ? ' invalid' : ''}`}>
                   <span className="sr-only">Reading at {r.distance} m</span>
@@ -77,8 +73,8 @@ export function Readings({ state, setState }: { state: AppState; setState: Dispa
         </form>
       </div>
 
-      <Tip tone={nearCount < 2 && valid.length >= 3 ? 'warn' : 'info'}>
-        Include two or more near distances (under {NEAR_LIMIT} m). Close up your crawl turns back, and they show us where.
+      <Tip>
+        Include a few short distances as well as long ones. Up close your crawl turns back, and those readings show where.
       </Tip>
     </Screen>
   );

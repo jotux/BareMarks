@@ -7,7 +7,10 @@ import { viteSingleFile } from 'vite-plugin-singlefile';
 // In dev, reload the whole page on every change instead of patching modules in place.
 const fullReload = (): Plugin => ({
   name: 'full-reload',
-  handleHotUpdate({ server }) {
+  handleHotUpdate({ server, modules, timestamp }) {
+    // returning [] skips Vite's own invalidation, so drop the stale transforms first
+    const seen = new Set<(typeof modules)[number]>();
+    for (const mod of modules) server.moduleGraph.invalidateModule(mod, seen, timestamp, true);
     server.ws.send({ type: 'full-reload' });
     return [];
   },

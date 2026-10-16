@@ -6,7 +6,7 @@ const exact = (d: number) => 60 - 200 / d - 1.2 * d;
 const r = fitCrawl([5, 10, 18, 25, 30, 40].map((d) => ({ distance: d, crawl: exact(d) })));
 if (!r.ok) throw new Error(r.reason);
 const fit: CrawlFit = r.fit;
-const opts = { minor: 4, zoneLength: 52, nearestReading: 5, farthestReading: 40 };
+const opts = { minor: 4, scaleMax: 52, nearestReading: 5, farthestReading: 40 };
 
 describe('buildMarks', () => {
   const marks = buildMarks(fit, opts);
@@ -24,8 +24,8 @@ describe('buildMarks', () => {
     expect(marks.some((m) => m.id.startsWith('L7·'))).toBe(false);
   });
 
-  it('keeps every line inside the marking zone', () => {
-    const tight = buildMarks(fit, { ...opts, zoneLength: 20 });
+  it('keeps every line inside the scale', () => {
+    const tight = buildMarks(fit, { ...opts, scaleMax: 20 });
     expect(tight.every((m) => m.crawl >= 0 && m.crawl <= 20)).toBe(true);
     expect(tight[0].id).toBe('L1');
     expect(tight[0].distance).toBe(30); // crawl at 25 m is 22 mm

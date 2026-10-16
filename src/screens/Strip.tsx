@@ -1,6 +1,7 @@
 import { NextLink, PrintButton, Screen } from '../components/Screen';
 import { ScaleBar, StripDrawing } from '../components/drawings';
-import { AppState, TabSpec } from '../state';
+import { AppState, SCALE_MAX, TabSpec, zoneLength } from '../state';
+import { tickStep } from '../model/strip';
 
 const STEPS_TEXT = [
   'Cut along the dashed line.',
@@ -10,6 +11,11 @@ const STEPS_TEXT = [
 
 const summary = (tab: TabSpec) =>
   `${tab.faceLength} × ${tab.faceWidth} mm · ${tab.hand} hand · zone ${tab.zoneStart}–${tab.zoneEnd} mm`;
+
+const scaleNote = (tab: TabSpec) => {
+  const step = tickStep(zoneLength(tab), SCALE_MAX);
+  return `Reads 0–${SCALE_MAX} down the marking zone, with a tick every ${step === 1 ? 'unit' : `${step} units`}.`;
+};
 
 export function Strip({ state }: { state: AppState }) {
   const { tab } = state;
@@ -27,6 +33,7 @@ export function Strip({ state }: { state: AppState }) {
             <div>
               <h2 className="label-caps">Strip</h2>
               <p className="muted">{summary(tab)}</p>
+              <p className="muted">{scaleNote(tab)}</p>
             </div>
             <div>
               <h2 className="label-caps">Scale check</h2>
@@ -40,7 +47,7 @@ export function Strip({ state }: { state: AppState }) {
 
       <section className="print-only print-page">
         <h1>Baremarks sight-in strip</h1>
-        <p>{summary(tab)}</p>
+        <p>{summary(tab)} · {scaleNote(tab)}</p>
         <div className="print-row">
           <StripDrawing tab={tab} trueSize />
           <div className="print-notes">

@@ -1,8 +1,10 @@
 // Everything here is drawn in millimetres. On screen the SVGs scale to their
 // container; with `trueSize` they carry real mm dimensions so they print 1:1.
+// Crawls arrive in strip units (0–100 across the zone) and are placed with unitsToMm.
 import type { TabSpec } from '../state';
-import { zoneLength, fmtMetres } from '../state';
+import { SCALE_MAX, fmtMetres, unitsToMm, zoneLength } from '../state';
 import type { Mark, NearLabel } from '../model/marks';
+import { stripTicks, tickStep } from '../model/strip';
 
 function size(w: number, h: number, trueSize?: boolean) {
   return trueSize ? { width: `${w}mm`, height: `${h}mm` } : { className: 'scaled' };
@@ -20,22 +22,23 @@ const CUT = { fill: 'none', stroke: '#4A5650', strokeWidth: 0.3, strokeDasharray
 
 export function StripDrawing({ tab, trueSize }: { tab: TabSpec; trueSize?: boolean }) {
   const { faceWidth: w, faceLength: h, zoneStart } = tab;
-  const len = Math.floor(zoneLength(tab));
+  const ticks = stripTicks(zoneLength(tab), SCALE_MAX);
   // ticks run down the edge under the index finger; mirror for a left-handed tab
   const left = tab.hand === 'right';
   const x0 = left ? 0 : w;
   const dir = left ? 1 : -1;
+  const LEN = { label: 7, half: 5, small: 3 };
   return (
-    <svg viewBox={`0 0 ${w} ${h}`} {...size(w, h, trueSize)} role="img" aria-label={`Sight-in strip, ${len} mm scale`}>
+    <svg viewBox={`0 0 ${w} ${h}`} {...size(w, h, trueSize)} role="img"
+      aria-label={`Sight-in strip, 0 to ${SCALE_MAX} with a tick every ${tickStep(zoneLength(tab), SCALE_MAX)}`}>
       <path d={facePath(w, h)} {...CUT} />
-      {Array.from({ length: len + 1 }, (_, mm) => {
-        const y = zoneStart + mm;
-        const long = mm % 5 === 0;
-        return <line key={mm} x1={x0} x2={x0 + dir * (long ? 7 : 3.5)} y1={y} y2={y} stroke="#17201B" strokeWidth={long ? 0.3 : 0.2} />;
+      {ticks.map((t) => {
+        const y = unitsToMm(tab, t.units);
+        return <line key={t.units} x1={x0} x2={x0 + dir * LEN[t.size]} y1={y} y2={y} stroke="#17201B" strokeWidth={t.size === 'small' ? 0.18 : 0.3} />;
       })}
-      {Array.from({ length: Math.floor(len / 5) + 1 }, (_, i) => (
-        <text key={i} x={x0 + dir * 8.5} y={zoneStart + i * 5} className="svg-mono" fontSize={2.6} dominantBaseline="central" textAnchor={left ? 'start' : 'end'}>
-          {i * 5}
+      {ticks.filter((t) => t.size === 'label').map((t) => (
+        <text key={t.units} x={x0 + dir * 8.5} y={unitsToMm(tab, t.units)} className="svg-mono" fontSize={2.6} dominantBaseline="central" textAnchor={left ? 'start' : 'end'}>
+          {t.units}
         </text>
       ))}
       <text x={left ? w - 2.5 : 2.5} y={zoneStart} className="svg-sans" fontSize={2} fill="#4A5650" writingMode="vertical-rl">TOP · NOCK SIDE</text>
@@ -59,7 +62,7 @@ export function TabTemplate({ tab, marks, trueSize }: { tab: TabSpec; marks: Mar
       <path d={facePath(w, h)} {...CUT} />
       {marks.map((m) => {
         const inset = w * (m.long ? 0.14 : 0.34);
-        const y = tab.zoneStart + m.crawl;
+        const y = unitsToMm(tab, m.crawl);
         return <line key={m.id} x1={inset} x2={w - inset} y1={y} y2={y} stroke="#17201B" strokeWidth={0.35} />;
       })}
     </svg>
@@ -86,7 +89,7 @@ export function KeyCard({ tab, marks, near, foldCrawl, foldDistance, trueSize }:
   const tabX = NEAR_COL + GAP;
   const farX = tabX + w + GAP;
   const width = farX + FAR_COL;
-  const y = (crawl: number) => (tab.zoneStart + crawl) * KEY_SCALE;
+  const y = (crawl: number) => unitsToMm(tab, crawl) * KEY_SCALE;
 
   // label every long line; short lines only where there is room
   const farPlaced: number[] = [];

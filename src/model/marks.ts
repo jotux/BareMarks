@@ -11,8 +11,8 @@ export interface Mark {
 export interface MarkOptions {
   /** short lines between each pair of long lines */
   minor: number;
-  /** height of the marking zone, mm */
-  zoneLength: number;
+  /** bottom of the strip scale; crawls outside 0..scaleMax are off the marking zone */
+  scaleMax: number;
   nearestReading: number;
   farthestReading: number;
 }
@@ -29,7 +29,7 @@ export function buildMarks(fit: CrawlFit, o: MarkOptions): Mark[] {
     ? Math.floor(fit.fold / 5) * 5 + 5
     : Math.ceil(o.nearestReading / 5 - EPS) * 5;
   const last = Math.floor((fit.pointOn ?? o.farthestReading) / 5 + EPS) * 5;
-  const inZone = (crawl: number) => crawl >= -EPS && crawl <= o.zoneLength + EPS;
+  const inZone = (crawl: number) => crawl >= -EPS && crawl <= o.scaleMax + EPS;
 
   const majors: number[] = [];
   for (let d = first; d <= last; d += 5) if (inZone(crawlAt(fit, d))) majors.push(d);
@@ -53,12 +53,12 @@ export interface NearLabel {
   crawl: number;
   /** id of the line closest to this crawl */
   ref: string;
-  /** true when that line is within a quarter millimetre */
+  /** true when that line is within half a strip unit */
   exact: boolean;
 }
 
 /** Near distances (inside the fold) placed on the key card next to the line they share. */
-export function nearLabels(fit: CrawlFit, marks: Mark[], distances: number[], zoneLength: number): NearLabel[] {
+export function nearLabels(fit: CrawlFit, marks: Mark[], distances: number[], scaleMax: number): NearLabel[] {
   const fold = fit.fold;
   if (fold === null || marks.length === 0) return [];
   return distances
@@ -66,7 +66,7 @@ export function nearLabels(fit: CrawlFit, marks: Mark[], distances: number[], zo
     .map((d) => {
       const crawl = crawlAt(fit, d);
       const best = marks.reduce((m, x) => (Math.abs(x.crawl - crawl) < Math.abs(m.crawl - crawl) ? x : m));
-      return { distance: d, crawl, ref: best.id, exact: Math.abs(best.crawl - crawl) < 0.25 };
+      return { distance: d, crawl, ref: best.id, exact: Math.abs(best.crawl - crawl) < 0.5 };
     })
-    .filter((l) => l.crawl >= 0 && l.crawl <= zoneLength);
+    .filter((l) => l.crawl >= 0 && l.crawl <= scaleMax);
 }

@@ -77,7 +77,7 @@ export function Fit({ state, result, readings }: { state: AppState; result: FitR
       footer={<NextLink to="sheet">Build marker sheet</NextLink>}
     >
       <div className="stats">
-        <div className="stat"><div className="stat-label">Fit error</div><div className="stat-value">{fit.rms.toFixed(1)}<span> mm</span></div></div>
+        <div className="stat"><div className="stat-label">Fit error</div><div className="stat-value">{fit.rms.toFixed(1)}</div></div>
         <div className="stat"><div className="stat-label">Fold</div><div className="stat-value">{fold !== null ? fold.toFixed(0) : '—'}<span> m</span></div></div>
         <div className="stat"><div className="stat-label">Point-on</div><div className="stat-value">{fit.pointOn !== null ? fit.pointOn.toFixed(0) : '—'}<span> m</span></div></div>
       </div>
@@ -89,11 +89,11 @@ export function Fit({ state, result, readings }: { state: AppState; result: FitR
             <span><svg width="20" height="6" aria-hidden="true"><line x1="0" y1="3" x2="20" y2="3" stroke="#C2410C" strokeWidth="2.5" strokeDasharray="6 4" /></svg>Near branch</span>
           )}
           <span><svg width="20" height="6" aria-hidden="true"><line x1="0" y1="3" x2="20" y2="3" stroke="#0F5C5A" strokeWidth="2.5" /></svg>Far branch</span>
-          <span>Crawl mm ↑ · distance m →</span>
+          <span>Strip reading ↑ · distance m →</span>
         </figcaption>
       </figure>
 
-      {fit.rms > 1.5 && <Tip tone="warn">The curve misses some readings by more than a millimetre or two. Check them for typos, or reshoot the odd one out.</Tip>}
+      {fit.rms > 3 && <Tip tone="warn">The curve misses some readings by a few strip units. Check them for typos, or reshoot the odd one out.</Tip>}
       {fold === null && <Tip tone="warn">No turn-back found yet. Add readings at a few shorter distances and fit again.</Tip>}
 
       {pairs.length > 0 && (

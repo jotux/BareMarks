@@ -16,12 +16,15 @@ export interface AppState {
   tab: TabSpec;
   /** metres, sorted */
   distances: number[];
-  /** raw text typed per distance, keyed by distance */
+  /** raw text typed per distance, keyed by distance: strip units, 0 at the top of the zone, 100 at the bottom */
   readings: Record<string, string>;
   minorMarks: number;
 }
 
 export const MINOR_RANGE = { min: 1, max: 10 };
+
+/** The sight-in strip reads 0–100 across the marking zone, whatever its size. */
+export const SCALE_MAX = 100;
 
 export const defaultState: AppState = {
   tab: { hand: 'right', faceLength: 72, faceWidth: 38, zoneStart: 6, zoneEnd: 58 },
@@ -30,19 +33,33 @@ export const defaultState: AppState = {
   minorMarks: 4,
 };
 
-const STORAGE_KEY = 'baremarks:v1';
+const STORAGE_KEY = 'baremarks:v2';
+/** v1 stored readings in mm down the zone */
+const STORAGE_KEY_V1 = 'baremarks:v1';
+
+function merge(saved: Partial<AppState>): AppState {
+  return {
+    ...defaultState,
+    ...saved,
+    tab: { ...defaultState.tab, ...saved.tab },
+    readings: { ...saved.readings },
+  };
+}
 
 function load(): AppState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return defaultState;
-    const saved = JSON.parse(raw) as Partial<AppState>;
-    return {
-      ...defaultState,
-      ...saved,
-      tab: { ...defaultState.tab, ...saved.tab },
-      readings: { ...saved.readings },
-    };
+    if (raw) return merge(JSON.parse(raw));
+    const v1 = localStorage.getItem(STORAGE_KEY_V1);
+    if (!v1) return defaultState;
+    const state = merge(JSON.parse(v1));
+    const perMm = SCALE_MAX / zoneLength(state.tab);
+    const readings: Record<string, string> = {};
+    for (const [d, text] of Object.entries(state.readings)) {
+      const mm = parseNum(text);
+      readings[d] = mm === null ? text : String(Math.round(mm * perMm * 2) / 2);
+    }
+    return { ...state, readings };
   } catch {
     return defaultState;
   }
@@ -62,6 +79,8 @@ export function useAppState() {
 }
 
 export const zoneLength = (tab: TabSpec) => tab.zoneEnd - tab.zoneStart;
+/** mm down the tab face for a strip reading */
+export const unitsToMm = (tab: TabSpec, units: number) => tab.zoneStart + (units * zoneLength(tab)) / SCALE_MAX;
 
 export function parseNum(text: string): number | null {
   const t = text.trim().replace(',', '.');
@@ -90,13 +109,12 @@ export interface ReadingRow {
 }
 
 export function readingRows(state: AppState): ReadingRow[] {
-  const max = zoneLength(state.tab);
   return state.distances.map((distance) => {
     const text = state.readings[distance] ?? '';
     const value = parseNum(text);
     let error: string | null = null;
     if (text.trim() !== '' && value === null) error = 'Not a number';
-    else if (value !== null && (value < 0 || value > max)) error = `Must be 0–${max} mm`;
+    else if (value !== null && (value < 0 || value > SCALE_MAX)) error = `Must be 0–${SCALE_MAX}`;
     return { distance, text, value: error ? null : value, error };
   });
 }

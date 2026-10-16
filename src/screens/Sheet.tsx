@@ -3,7 +3,7 @@ import { PrintButton, Screen, Tip } from '../components/Screen';
 import { KeyCard, TabTemplate } from '../components/drawings';
 import { FitResult, Reading, crawlAt } from '../model/fit';
 import { buildMarks, nearLabels } from '../model/marks';
-import { AppState, MINOR_RANGE, zoneLength } from '../state';
+import { AppState, MINOR_RANGE, SCALE_MAX } from '../state';
 
 const RULES = [
   'Two line lengths only, same thickness and colour',
@@ -30,12 +30,12 @@ export function Sheet({ state, setState, result, readings }: {
   const { tab, minorMarks: minor } = state;
   const marks = buildMarks(fit, {
     minor,
-    zoneLength: zoneLength(tab),
+    scaleMax: SCALE_MAX,
     nearestReading: Math.min(...readings.map((r) => r.distance)),
     farthestReading: Math.max(...readings.map((r) => r.distance)),
   });
-  const near = nearLabels(fit, marks, state.distances, zoneLength(tab));
-  const foldCrawl = fit.fold !== null && crawlAt(fit, fit.fold) <= zoneLength(tab) ? crawlAt(fit, fit.fold) : null;
+  const near = nearLabels(fit, marks, state.distances, SCALE_MAX);
+  const foldCrawl = fit.fold !== null && crawlAt(fit, fit.fold) <= SCALE_MAX ? crawlAt(fit, fit.fold) : null;
   const setMinor = (n: number) =>
     setState((s) => ({ ...s, minorMarks: Math.min(MINOR_RANGE.max, Math.max(MINOR_RANGE.min, n)) }));
   const step = 5 / (minor + 1);

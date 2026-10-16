@@ -1,0 +1,85 @@
+import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
+import { NextLink, Screen, Tip } from '../components/Screen';
+import { AppState, NEAR_LIMIT, parseNum, readingRows, validReadings } from '../state';
+
+export function Readings({ state, setState }: { state: AppState; setState: Dispatch<SetStateAction<AppState>> }) {
+  const [adding, setAdding] = useState('');
+  const rows = readingRows(state);
+  const valid = validReadings(state);
+  const nearCount = valid.filter((r) => r.distance < NEAR_LIMIT).length;
+
+  const setReading = (d: number, text: string) =>
+    setState((s) => ({ ...s, readings: { ...s.readings, [d]: text } }));
+
+  const addDistance = (e: FormEvent) => {
+    e.preventDefault();
+    const d = parseNum(adding);
+    if (d === null || d <= 0 || d > 150) return;
+    setState((s) => (s.distances.includes(d) ? s : { ...s, distances: [...s.distances, d].sort((a, b) => a - b) }));
+    setAdding('');
+  };
+
+  return (
+    <Screen
+      step={2}
+      title="Enter your readings"
+      intro="The strip number under your index finger at each distance. Half-millimetres are fine."
+      footer={
+        <NextLink to="fit" blocked={valid.length < 3 ? 'Enter readings for at least three distances.' : null}>
+          Fit my curve
+        </NextLink>
+      }
+    >
+      <div className="card table">
+        <div className="table-head"><span>Distance</span><span>Reading</span><span>Point-on</span></div>
+        {rows.map((r) => {
+          const pointOn = r.value === 0;
+          return (
+            <div className="table-row" key={r.distance}>
+              <span className="distance">
+                {r.distance} m
+                {r.distance < NEAR_LIMIT && <span className="near-tag">Near</span>}
+              </span>
+              <div>
+                <label className={`field-box compact${r.error ? ' invalid' : ''}`}>
+                  <span className="sr-only">Reading at {r.distance} m</span>
+                  <input
+                    inputMode="decimal"
+                    placeholder="—"
+                    value={r.text}
+                    aria-invalid={!!r.error}
+                    onChange={(e) => setReading(r.distance, e.target.value)}
+                  />
+                  <span className="unit">mm</span>
+                </label>
+                {r.error && <div className="field-error">{r.error}</div>}
+              </div>
+              <button
+                className="pill"
+                aria-pressed={pointOn}
+                onClick={() => setReading(r.distance, pointOn ? '' : '0')}
+              >
+                {pointOn ? 'Point-on' : 'Mark'}
+              </button>
+            </div>
+          );
+        })}
+        <form className="add-row" onSubmit={addDistance}>
+          <label className="field-box compact">
+            <span className="sr-only">New distance in metres</span>
+            <input inputMode="decimal" placeholder="Add a distance" value={adding} onChange={(e) => setAdding(e.target.value)} />
+            <span className="unit">m</span>
+          </label>
+          <button className="btn-text" type="submit">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+            Add
+          </button>
+        </form>
+      </div>
+
+      <Tip tone={nearCount < 2 && valid.length >= 3 ? 'warn' : 'info'}>
+        Include two or more near distances (under {NEAR_LIMIT} m). Close up your crawl turns back, and they show us where.
+      </Tip>
+    </Screen>
+  );
+}

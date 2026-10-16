@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Marker sheet</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0F5C5A}a:hover{color:#0A3F3E}
+</style>
+</helmet>
+<div style="width: 390px; height: 1340px; box-sizing: border-box; background: #F2F4F1; color: #17201B; font-family: 'IBM Plex Sans', sans-serif; display: flex; flex-direction: column; overflow: hidden">
+  <header style="padding: 20px 20px 12px; display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center">
+    <div style="display: contents">
+      <a href="Fit.dc.html" aria-label="Back" style="display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; margin-left: -12px; color: #17201B"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></a>
+      <div role="img" aria-label="Baremarks" style="display: flex; flex-direction: column; gap: 2px"><div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px; line-height: 1; letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap">Bare<span style="color: #B07A00">marks</span></div><svg viewBox="0 0 100 6" preserveAspectRatio="none" aria-hidden="true" style="display: block; width: 100%; height: 6px; fill: #B07A00"><rect x="0" y="0" width="100" height="1.4"></rect><rect x="0" y="0" width="1.2" height="6"></rect><rect x="5" y="0" width="1.2" height="3.4"></rect><rect x="10" y="0" width="1.2" height="3.4"></rect><rect x="15" y="0" width="1.2" height="3.4"></rect><rect x="20" y="0" width="1.2" height="3.4"></rect><rect x="25" y="0" width="1.2" height="6"></rect><rect x="30" y="0" width="1.2" height="3.4"></rect><rect x="35" y="0" width="1.2" height="3.4"></rect><rect x="40" y="0" width="1.2" height="3.4"></rect><rect x="45" y="0" width="1.2" height="3.4"></rect><rect x="50" y="0" width="1.2" height="6"></rect><rect x="55" y="0" width="1.2" height="3.4"></rect><rect x="60" y="0" width="1.2" height="3.4"></rect><rect x="65" y="0" width="1.2" height="3.4"></rect><rect x="70" y="0" width="1.2" height="3.4"></rect><rect x="75" y="0" width="1.2" height="6"></rect><rect x="80" y="0" width="1.2" height="3.4"></rect><rect x="85" y="0" width="1.2" height="3.4"></rect><rect x="90" y="0" width="1.2" height="3.4"></rect><rect x="95" y="0" width="1.2" height="3.4"></rect><rect x="98.8" y="0" width="1.2" height="6"></rect></svg></div>
+    </div>
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #4A5650; text-align: right">STEP 5 / 5</div>
+  </header>
+  <div style="height: 4px; margin: 0 20px; background: #D9DED9; border-radius: 2px"><div style="width: 100%; height: 4px; background: {{accent}}; border-radius: 2px"></div></div>
+  <main style="padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; flex-grow: 1">
+    <div>
+      <h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-size: 34px; line-height: 1.05; font-weight: 700">Marker sheet</h1>
+      <p style="margin: 4px 0 0; font-size: 14px; line-height: 1.4; color: #4A5650">Plain lines go on the tab. The key card is the same layout, numbered, and stays in your quiver.</p>
+    </div>
+
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 8px 8px 14px; background: #FFFFFF; border: 1px solid #D9DED9; border-radius: 12px">
+      <div style="display: flex; flex-direction: column">
+        <span style="font-size: 13px; font-weight: 600">Small marks between</span>
+        <span style="font-size: 12px; color: #4A5650; font-family: 'IBM Plex Mono', monospace">≈ {{stepLabel}} m per mark</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 4px">
+        <button onClick="{{dec}}" aria-label="Fewer small marks" style="width: 44px; height: 44px; border-radius: 10px; border: 1px solid #C9CFC9; background: #F7F8F6; color: #17201B; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14"></path></svg></button>
+        <output aria-live="polite" style="width: 40px; text-align: center; font: 500 22px 'IBM Plex Mono', monospace">{{minor}}</output>
+        <button onClick="{{inc}}" aria-label="More small marks" style="width: 44px; height: 44px; border-radius: 10px; border: 1px solid #C9CFC9; background: #F7F8F6; color: #17201B; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button>
+      </div>
+    </div>
+
+    <section style="display: flex; gap: 16px; padding: 14px; background: #FFFFFF; border-radius: 14px; border: 1px solid #D9DED9">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 6px">
+        <div style="position: relative; width: 100px; height: {{tabH}}; border: 1.5px dashed #4A5650; border-radius: 10px 10px 36px 36px">
+          <sc-for list="{{tabLines}}" as="l" hint-placeholder-count="40">
+            <div style="position: absolute; left: {{l.inset}}; right: {{l.inset}}; top: {{l.top}}; height: 1.5px; background: #17201B"></div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="flex: 1; display: flex; flex-direction: column; gap: 10px; font-size: 13px; line-height: 1.4; min-width: 0">
+        <div style="font: 700 15px 'Barlow Condensed', sans-serif; letter-spacing: 0.04em; text-transform: uppercase">Tab face · 1:1</div>
+        <div style="display: flex; flex-direction: column; gap: 6px; color: #24322D">
+          <span style="display: flex; align-items: center; gap: 8px"><span style="width: 28px; height: 1.5px; background: #17201B"></span>Long line, every 5 m</span>
+          <span style="display: flex; align-items: center; gap: 8px"><span style="width: 28px; display: flex; justify-content: center"><span style="width: 12px; height: 1.5px; background: #17201B"></span></span>Short line, {{minor}} per gap</span>
+        </div>
+        <div style="color: #4A5650">Cut out, hold against the tab and transfer each line with a fine pen. Nothing else goes on the tab.</div>
+      </div>
+    </section>
+
+    <section aria-label="Key card" style="display: flex; flex-direction: column; gap: 8px; padding: 14px 14px 16px; background: #FFFFFF; border-radius: 14px; border: 2px solid #17201B">
+      <div style="display: flex; justify-content: space-between; align-items: baseline">
+        <span style="font: 700 17px 'Barlow Condensed', sans-serif; letter-spacing: 0.04em; text-transform: uppercase">Key card</span>
+        <span style="font: 500 11px 'IBM Plex Mono', monospace; color: #4A5650">2× scale · L2·3 = 3rd short above L2</span>
+      </div>
+      <div style="display: grid; grid-template-columns: 82px 112px minmax(0, 1fr); gap: 0 10px; font: 600 10px 'IBM Plex Sans', sans-serif; letter-spacing: 0.06em; text-transform: uppercase; color: #4A5650">
+        <span style="text-align: right; color: #9A3412">Near</span><span style="text-align: center">Mark</span><span style="color: #0A3F3E">Far</span>
+      </div>
+      <div style="position: relative; width: 100%; height: {{keyH}}">
+        <div style="position: absolute; left: 92px; top: 0; width: 112px; height: {{keyH}}; box-sizing: border-box; border: 1.5px dashed #8A948E; border-radius: 12px 12px 40px 40px"></div>
+        <div style="position: absolute; left: 96px; width: 104px; top: {{foldTop}}; height: 0; border-top: 1.5px dashed #9A3412"></div>
+        <sc-for list="{{keyLines}}" as="l" hint-placeholder-count="40">
+          <div style="position: absolute; left: {{l.left}}; width: {{l.w}}; top: {{l.top}}; height: {{l.h}}; background: #17201B"></div>
+        </sc-for>
+        <sc-for list="{{farLabels}}" as="r" hint-placeholder-count="20">
+          <sc-if value="{{r.long}}" hint-placeholder-val="{{ true }}">
+            <div style="position: absolute; left: 214px; top: {{r.top}}; transform: translateY(-50%); display: flex; align-items: center; gap: 6px; white-space: nowrap">
+              <span style="padding: 1px 6px; border-radius: 6px; background: #17201B; color: #FFFFFF; font: 600 11px 'IBM Plex Mono', monospace">{{r.id}}</span>
+              <span style="font: 600 14px 'IBM Plex Mono', monospace; color: #0A3F3E">{{r.d}}</span>
+            </div>
+          </sc-if>
+          <sc-if value="{{r.short}}" hint-placeholder-val="{{ false }}">
+            <div style="position: absolute; left: 214px; top: {{r.top}}; transform: translateY(-50%); display: flex; align-items: center; gap: 6px; white-space: nowrap; font: 500 10px 'IBM Plex Mono', monospace; color: #4A5650">
+              <span style="width: 22px; text-align: right">·{{r.k}}</span><span>{{r.d}}</span>
+            </div>
+          </sc-if>
+        </sc-for>
+        <sc-for list="{{nearLabels}}" as="n" hint-placeholder-count="5">
+          <div style="position: absolute; left: 0; width: 88px; top: {{n.top}}; transform: translateY(-50%); display: flex; align-items: center; justify-content: flex-end; gap: 4px; white-space: nowrap">
+            <span style="font: 600 13px 'IBM Plex Mono', monospace; color: #9A3412">{{n.d}}</span>
+            <span style="font: 500 10px 'IBM Plex Mono', monospace; color: #4A5650">{{n.ref}}</span>
+            <svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><path d="M0 0l8 4-8 4z" fill="#9A3412"></path></svg>
+          </div>
+        </sc-for>
+        <div style="position: absolute; left: 0; width: 88px; top: {{foldTop}}; transform: translateY(-50%); text-align: right; font: 600 10px 'IBM Plex Sans', sans-serif; letter-spacing: 0.06em; text-transform: uppercase; color: #9A3412">Fold {{fold}} m</div>
+      </div>
+    </section>
+
+    <div style="display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; border-radius: 12px; background: #E4ECEA">
+      <div style="display: flex; justify-content: space-between; align-items: center">
+        <span style="font: 700 15px 'Barlow Condensed', sans-serif; letter-spacing: 0.04em; text-transform: uppercase; color: #0A3F3E">World Archery check</span>
+        <span style="font: 600 12px 'IBM Plex Sans', sans-serif; color: #FFFFFF; background: #0F5C5A; padding: 3px 9px; border-radius: 10px">Pass</span>
+      </div>
+      <sc-for list="{{checks}}" as="c" hint-placeholder-count="3">
+        <div style="display: flex; gap: 8px; align-items: flex-start; font-size: 13px; line-height: 1.35; color: #24322D">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0F5C5A" stroke-width="2.5" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M5 12l5 5 9-10"></path></svg>
+          <span>{{c}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </main>
+  <footer style="padding: 10px 20px 24px; display: flex; gap: 10px">
+    <button style="flex: 1; height: 54px; border-radius: 12px; border: 2px solid #17201B; background: #FFFFFF; color: #17201B; font: 700 18px 'Barlow Condensed', sans-serif; letter-spacing: 0.05em; text-transform: uppercase">Save PDF</button>
+    <button style="flex: 1; height: 54px; border-radius: 12px; border: none; background: {{accent}}; color: #17201B; font: 700 18px 'Barlow Condensed', sans-serif; letter-spacing: 0.05em; text-transform: uppercase">Print sheet</button>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#E0A100","options":["#E0A100","#E86A33","#5BA4D9"]},"minorMarks":{"editor":"int","default":4,"min":1,"max":10},"$preview":{"width":390,"height":1340}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const data = [[5, 26.5], [10, 41.5], [18, 39.5], [25, 32.5], [30, 26.5], [40, 13.5], [50, 0]];
+    const basis = (d) => [1, -1 / d, -d];
+    const A = [[0,0,0],[0,0,0],[0,0,0]], r = [0,0,0];
+    data.forEach(([d, y]) => { const b = basis(d); for (let i = 0; i < 3; i++) { r[i] += b[i] * y; for (let j = 0; j < 3; j++) A[i][j] += b[i] * b[j]; } });
+    const M = A.map((row, i) => row.concat([r[i]]));
+    for (let i = 0; i < 3; i++) for (let j = i + 1; j < 3; j++) { const k = M[j][i] / M[i][i]; for (let m = i; m < 4; m++) M[j][m] -= k * M[i][m]; }
+    const p = [0, 0, 0];
+    for (let i = 2; i >= 0; i--) { let v = M[i][3]; for (let k = i + 1; k < 3; k++) v -= M[i][k] * p[k]; p[i] = v / M[i][i]; }
+    const f = (d) => Math.max(p[0] - p[1] / d - p[2] * d, 0);
+    const fold = Math.sqrt(p[1] / p[2]);
+    const twin = (d) => p[1] / (p[2] * d);
+
+    const fromProp = Math.min(10, Math.max(1, this.props.minorMarks ?? 4));
+    const minor = (this.state && this.state.minor) || fromProp;
+    const set = (n) => this.setState({ minor: Math.min(10, Math.max(1, n)) });
+
+    // every mark on the far branch: long every 5 m, `minor` short ones between
+    const majors = [15, 20, 25, 30, 35, 40, 45, 50];
+    const step = 5 / (minor + 1);
+    const marks = [];
+    majors.forEach((d, i) => {
+      marks.push({ d, long: true, id: 'L' + (i + 1), i, k: 0 });
+      if (i < majors.length - 1) for (let k = 1; k <= minor; k++) marks.push({ d: d + k * step, long: false, id: 'L' + (i + 1) + '·' + k, i, k });
+    });
+    const maxCrawl = Math.max(f(fold), f(majors[0]));
+    const fmt = (x) => (Math.abs(x - Math.round(x)) < 0.05 ? Math.round(x) : x.toFixed(1)) + ' m';
+
+    // tab at 1:1
+    const t1 = 6, t0 = 16;
+    const tabLines = marks.map((m) => ({ top: (t0 + f(m.d) * t1) + 'px', inset: m.long ? '10px' : '32px' }));
+
+    // key card at 2x, same layout
+    const t2 = 11, k0 = 16;
+    const yK = (d) => k0 + f(d) * t2;
+    const keyLines = marks.map((m) => ({
+      top: yK(m.d) + 'px',
+      left: m.long ? '102px' : '126px',
+      w: m.long ? '92px' : '44px',
+      h: m.long ? '2px' : '1.5px'
+    }));
+
+    // label every long; short ones only where they don't collide
+    const placed = [];
+    const far = [];
+    marks.filter((m) => m.long).forEach((m) => { placed.push(yK(m.d)); far.push({ top: yK(m.d) + 'px', long: true, short: false, id: m.id, d: fmt(m.d), k: '' }); });
+    marks.filter((m) => !m.long).forEach((m) => {
+      const y = yK(m.d);
+      if (placed.every((q) => Math.abs(q - y) >= 11)) { placed.push(y); far.push({ top: y + 'px', long: false, short: true, id: m.id, d: fmt(m.d), k: String(m.k) }); }
+    });
+
+    // near distances sit at their exact crawl, referenced to the nearest mark
+    const nearLabels = [3, 5, 6, 8, 10].map((d) => {
+      const de = twin(d);
+      let best = marks[0];
+      marks.forEach((m) => { if (Math.abs(m.d - de) < Math.abs(best.d - de)) best = m; });
+      const exact = Math.abs(best.d - de) < step * 0.2;
+      return { d: d + ' m', ref: (exact ? '' : '≈') + best.id, top: yK(de) + 'px' };
+    });
+
+    return {
+      accent: this.props.accent ?? '#E0A100',
+      minor: String(minor),
+      stepLabel: step.toFixed(minor >= 4 ? 2 : 1),
+      dec: () => set(minor - 1),
+      inc: () => set(minor + 1),
+      tabLines,
+      tabH: (t0 * 2 + maxCrawl * t1 + 20) + 'px',
+      keyLines,
+      farLabels: far,
+      nearLabels,
+      keyH: (k0 + maxCrawl * t2 + 36) + 'px',
+      foldTop: yK(fold) + 'px',
+      fold: fold.toFixed(0),
+      checks: ['Two line lengths only, same thickness and colour', 'No numbers or writing on the tab face', 'Key card kept separate from the tab']
+    };
+  }
+}
+</script>
+</body>
+</html>

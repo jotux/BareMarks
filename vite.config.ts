@@ -8,6 +8,14 @@ import { viteSingleFile } from 'vite-plugin-singlefile';
 // In dev, reload the whole page on every change instead of patching modules in place.
 const fullReload = (): Plugin => ({
   name: 'full-reload',
+  configureServer(server) {
+    // the version badge is baked in from package.json at startup, so restart when it changes
+    const pkg = path.resolve('package.json');
+    server.watcher.add(pkg);
+    server.watcher.on('change', (file) => {
+      if (path.resolve(file) === pkg) server.restart();
+    });
+  },
   handleHotUpdate({ server, modules, timestamp }) {
     // returning [] skips Vite's own invalidation, so drop the stale transforms first
     const seen = new Set<(typeof modules)[number]>();

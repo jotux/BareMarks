@@ -21,7 +21,7 @@ function facePath(w: number, h: number) {
 const CUT = { fill: 'none', stroke: '#4A5650', strokeWidth: 0.3, strokeDasharray: '1.5 1' };
 
 export function StripDrawing({ tab, trueSize }: { tab: TabSpec; trueSize?: boolean }) {
-  const { faceWidth: w, faceLength: h, zoneStart } = tab;
+  const { faceWidth: w, faceLength: h } = tab;
   const ticks = stripTicks(zoneLength(tab), SCALE_MAX);
   // ticks run down the edge under the index finger; mirror for a left-handed tab
   const left = tab.hand === 'right';
@@ -41,7 +41,7 @@ export function StripDrawing({ tab, trueSize }: { tab: TabSpec; trueSize?: boole
           {t.units}
         </text>
       ))}
-      <text x={left ? w - 2.5 : 2.5} y={zoneStart} className="svg-sans" fontSize={2} fill="#4A5650" writingMode="vertical-rl">TOP · NOCK SIDE</text>
+      <text x={w / 2} y={1.2} className="svg-sans" fontSize={2} fill="#4A5650" textAnchor="middle" dominantBaseline="hanging" letterSpacing={0.15}>TOP · NOCK SIDE</text>
     </svg>
   );
 }

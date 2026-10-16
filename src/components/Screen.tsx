@@ -52,6 +52,7 @@ export function Screen({ step, title, intro, children, footer }: ScreenProps) {
         )}
         {footer && <div className="footer-main">{footer}</div>}
       </footer>
+      <div className="version">Mobile-v{__APP_VERSION__}</div>
     </div>
   );
 }

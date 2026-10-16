@@ -101,6 +101,20 @@ h1, h2, p { margin: 0; }
 .footer .btn-outline { height: 54px; background: var(--accent); border-color: var(--accent); font: 700 18px var(--display); letter-spacing: 0.05em; text-transform: uppercase; }
 .btn-text { border: none; background: none; color: var(--teal); font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 6px; height: 44px; padding: 0 8px; }
 
+.version {
+  position: fixed;
+  bottom: 4px;
+  /* inside the app column on wide screens */
+  right: max(4px, calc(50vw - 240px + 4px));
+  z-index: 10;
+  padding: 2px 5px;
+  border-radius: 2px;
+  background: #000000;
+  color: #FFFFFF;
+  font: 400 11px/1.3 system-ui, 'Segoe UI', sans-serif;
+  pointer-events: none;
+}
+
 /* ---------- form controls ---------- */
 
 .group { border: none; margin: 0; padding: 0; min-width: 0; }

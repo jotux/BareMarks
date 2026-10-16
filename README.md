@@ -2,6 +2,8 @@
 
 Baremarks helps barebow archers make distance marks for their tab.
 
+**Try it:** https://jotux.github.io/BareMarks/
+
 Barebow archers aim by string walking: they move their index finger down the string by a set amount (the "crawl") for each distance. Many mark these crawl positions on the tab face. Baremarks turns a few sight-in readings into a full set of tab marks and a key card that maps each mark to a distance.
 
 ## How it works

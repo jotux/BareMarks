@@ -57,8 +57,7 @@ function CrawlChart({ fit, readings }: { fit: CrawlFit; readings: Reading[] }) {
 export function Fit({ state, result, readings }: { state: AppState; result: FitResult; readings: Reading[] }) {
   if (!result.ok) {
     return (
-      <Screen step={3} title="Your crawl curve" intro="We couldn't fit a curve yet."
-        footer={<a className="cta" href="#/readings">Back to readings</a>}>
+      <Screen step={3} title="Your crawl curve" intro="We couldn't fit a curve yet.">
         <Tip tone="warn">{result.reason}</Tip>
       </Screen>
     );

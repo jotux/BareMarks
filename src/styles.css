@@ -62,7 +62,6 @@ h1, h2, p { margin: 0; }
   align-items: center;
   min-height: 76px;
 }
-.back { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; margin-left: -12px; color: var(--ink); }
 .wordmark { display: flex; flex-direction: column; gap: 2px; }
 .wordmark-text { font: 700 22px/1 var(--display); letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; }
 .wordmark-text span { color: var(--accent-ink); }
@@ -75,7 +74,7 @@ h1, h2, p { margin: 0; }
 .main h1 { font: 700 34px/1.05 var(--display); }
 .intro { margin-top: 6px; font-size: 14px; line-height: 1.45; color: var(--muted); }
 
-.footer { padding: 12px 20px 28px; display: flex; flex-direction: column; gap: 8px; position: sticky; bottom: 0; background: linear-gradient(transparent, var(--ground) 30%); }
+.footer { padding: 12px 20px 28px; display: flex; align-items: flex-end; gap: 10px; position: sticky; bottom: 0; background: linear-gradient(transparent, var(--ground) 30%); }
 .cta {
   display: flex; align-items: center; justify-content: center;
   height: 54px; border-radius: 12px; border: none;
@@ -83,6 +82,8 @@ h1, h2, p { margin: 0; }
   font: 700 18px var(--display); letter-spacing: 0.05em; text-transform: uppercase;
 }
 .cta:hover { color: var(--ink); filter: brightness(1.05); }
+.cta-back { flex-shrink: 0; gap: 4px; padding: 0 18px 0 12px; }
+.footer-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
 .cta:disabled { background: var(--line); color: var(--muted); }
 .blocked { font-size: 13px; color: var(--near); text-align: center; }
 

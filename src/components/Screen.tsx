@@ -21,7 +21,7 @@ interface ScreenProps {
   title: string;
   intro: ReactNode;
   children: ReactNode;
-  footer: ReactNode;
+  footer?: ReactNode;
 }
 
 export function Screen({ step, title, intro, children, footer }: ScreenProps) {
@@ -29,11 +29,7 @@ export function Screen({ step, title, intro, children, footer }: ScreenProps) {
   return (
     <div className="screen no-print">
       <header className="topbar">
-        {prev ? (
-          <a className="back" href={`#/${prev.id}`} aria-label={`Back to ${prev.label}`}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
-          </a>
-        ) : <span />}
+        <span />
         <Wordmark />
         <div className="step-count">STEP {step + 1} / {STEPS.length}</div>
       </header>
@@ -47,7 +43,15 @@ export function Screen({ step, title, intro, children, footer }: ScreenProps) {
         </div>
         {children}
       </main>
-      <footer className="footer">{footer}</footer>
+      <footer className="footer">
+        {prev && (
+          <a className="cta cta-back" href={`#/${prev.id}`} aria-label={`Back to ${prev.label}`}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+            Back
+          </a>
+        )}
+        {footer && <div className="footer-main">{footer}</div>}
+      </footer>
     </div>
   );
 }

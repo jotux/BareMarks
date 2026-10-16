@@ -22,7 +22,7 @@ export function Readings({ state, setState }: { state: AppState; setState: Dispa
     <Screen
       step={2}
       title="Enter your readings"
-      intro={`The strip number (0–${SCALE_MAX}) under your index finger at each distance. Halfway between ticks is fine.`}
+      intro={`At each distance, the strip number (0–${SCALE_MAX}) level with your nock. Halfway between ticks is fine.`}
       footer={
         <NextLink to="fit" blocked={valid.length < 3 ? 'Enter readings for at least three distances.' : null}>
           Fit my curve

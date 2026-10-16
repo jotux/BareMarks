@@ -4,7 +4,7 @@ Baremarks helps barebow archers make distance marks for their tab.
 
 **Try it:** https://jotux.github.io/BareMarks/
 
-Barebow archers aim by string walking: they move their index finger down the string by a set amount (the "crawl") for each distance. Many mark these crawl positions on the tab face. Baremarks turns a few sight-in readings into a full set of tab marks and a key card that maps each mark to a distance.
+Barebow archers aim by string walking: they move their hand down the string below the nock by a set amount (the "crawl") for each distance. Many mark these crawl positions on the tab face. Baremarks turns a few sight-in readings into a full set of tab marks and a key card that maps each mark to a distance.
 
 ## How it works
 
@@ -12,7 +12,7 @@ The app walks you through five steps:
 
 1. **Describe your tab.** Enter your shooting hand, the size of the tab face, the part of the face you can mark, and the distances you want to sight in.
 2. **Print a sight-in strip.** Baremarks makes a strip sized to your tab that reads 0–50 down the marking zone, whatever size your tab is. Numbered major lines sit every 10, with ten divisions between them (a longer tick at each 5). On a zone shorter than 50 mm the small ticks drop to every 2 units so they stay at least 1 mm apart. Print it at 100% scale, check it against the 50 mm scale bar, cut it out and stick it on the tab.
-3. **Enter your readings.** Shoot each distance until your arrows group, then enter the strip reading under your index finger. The number is 0–50, and you can judge halfway between ticks. Mark the distance where you are point-on, meaning no crawl is needed.
+3. **Enter your readings.** Shoot each distance until your arrows group, then enter the strip reading level with your nock. The number is 0–50, and you can judge halfway between ticks. Mark the distance where you are point-on, meaning no crawl is needed.
 4. **Fit the curve.** Baremarks fits a curve through your readings and shows how well it matches them.
 5. **Get your marker sheet.** You get two things to print:
    - **A tab template at 1:1.** It has only plain lines: a long line every 5 m and a short line for each step in between (you pick how many). Hold it against the tab and copy the lines across with a fine pen.

@@ -157,6 +157,7 @@ svg.scaled { display: block; width: 100%; height: auto; }
 .chart-card { margin: 0; padding: 12px 14px 10px; }
 .chart { display: block; width: 100%; height: auto; }
 .chart-label { font: 500 10px var(--mono); fill: var(--muted); }
+.chart-label.miss-label { font-size: 9px; fill: #B42318; fill-opacity: 0.75; }
 .chart-label.caps { font: 600 10px var(--sans); letter-spacing: 0.06em; text-transform: uppercase; fill: var(--ink-2); }
 figcaption { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 11px; color: var(--muted); margin-top: 8px; }
 figcaption span { display: flex; align-items: center; gap: 5px; }

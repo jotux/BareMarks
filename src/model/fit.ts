@@ -44,6 +44,19 @@ export function farDistanceFor(fit: CrawlFit, crawl: number): number | null {
   return (k + Math.sqrt(disc)) / (2 * fit.c);
 }
 
+export interface Miss extends Reading {
+  /** reading minus the curve: positive means the reading sits below the curve on the tab (more crawl) */
+  off: number;
+}
+
+/** Readings further than `limit` from the fitted curve, worst first. */
+export function offCurve(fit: CrawlFit, readings: Reading[], limit: number): Miss[] {
+  return readings
+    .map((r) => ({ ...r, off: r.crawl - crawlAt(fit, r.distance) }))
+    .filter((m) => Math.abs(m.off) > limit)
+    .sort((a, b) => Math.abs(b.off) - Math.abs(a.off));
+}
+
 export function fitCrawl(readings: Reading[]): FitResult {
   if (new Set(readings.map((r) => r.distance)).size < 3) {
     return { ok: false, reason: 'Enter readings at three or more distances.' };

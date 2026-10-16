@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { crawlAt, farDistanceFor, fitCrawl, twinDistance, type CrawlFit } from './fit';
+import { crawlAt, farDistanceFor, fitCrawl, offCurve, twinDistance, type CrawlFit } from './fit';
 
 const truth = { a: 60, b: 200, c: 1.2 };
 const exact = (d: number) => truth.a - truth.b / d - truth.c * d;
@@ -55,5 +55,22 @@ describe('twins and inverses', () => {
 
   it('farDistanceFor inverts crawlAt on the far branch', () => {
     for (const d of [15, 22.5, 35, 45]) expect(farDistanceFor(fit, crawlAt(fit, d))).toBeCloseTo(d, 9);
+  });
+});
+
+describe('offCurve', () => {
+  it('flags only readings further than the limit, worst first', () => {
+    const readings = [5, 10, 18, 25, 30, 40, 50].map((d) => ({ distance: d, crawl: exact(d) }));
+    readings[2] = { distance: 18, crawl: exact(18) + 4 }; // one bad reading
+    const fit = mustFit(readings);
+    const misses = offCurve(fit, readings, 1.5);
+    expect(misses[0].distance).toBe(18);
+    expect(misses[0].off).toBeGreaterThan(1.5);
+    expect(misses.every((m) => Math.abs(m.off) > 1.5)).toBe(true);
+  });
+
+  it('flags nothing for a clean fit', () => {
+    const readings = [5, 10, 18, 25, 30, 40].map((d) => ({ distance: d, crawl: exact(d) }));
+    expect(offCurve(mustFit(readings), readings, 0.1)).toEqual([]);
   });
 });

@@ -16,15 +16,15 @@ export interface AppState {
   tab: TabSpec;
   /** metres, sorted */
   distances: number[];
-  /** raw text typed per distance, keyed by distance: strip units, 0 at the top of the zone, 100 at the bottom */
+  /** raw text typed per distance, keyed by distance: strip units, 0 at the top of the zone, SCALE_MAX at the bottom */
   readings: Record<string, string>;
   minorMarks: number;
 }
 
 export const MINOR_RANGE = { min: 1, max: 10 };
 
-/** The sight-in strip reads 0–100 across the marking zone, whatever its size. */
-export const SCALE_MAX = 100;
+/** The sight-in strip reads 0–50 across the marking zone, whatever its size. */
+export const SCALE_MAX = 50;
 
 export const defaultState: AppState = {
   tab: { hand: 'right', faceLength: 72, faceWidth: 38, zoneStart: 6, zoneEnd: 58 },
@@ -33,9 +33,12 @@ export const defaultState: AppState = {
   minorMarks: 4,
 };
 
-const STORAGE_KEY = 'baremarks:v2';
-/** v1 stored readings in mm down the zone */
-const STORAGE_KEY_V1 = 'baremarks:v1';
+const STORAGE_KEY = 'baremarks:v3';
+/** Older saves, newest first, with how many of their reading units fit in the zone */
+const OLDER_KEYS: { key: string; units: (tab: TabSpec) => number }[] = [
+  { key: 'baremarks:v2', units: () => 100 },
+  { key: 'baremarks:v1', units: (tab) => zoneLength(tab) }, // mm
+];
 
 function merge(saved: Partial<AppState>): AppState {
   return {
@@ -50,16 +53,19 @@ function load(): AppState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) return merge(JSON.parse(raw));
-    const v1 = localStorage.getItem(STORAGE_KEY_V1);
-    if (!v1) return defaultState;
-    const state = merge(JSON.parse(v1));
-    const perMm = SCALE_MAX / zoneLength(state.tab);
-    const readings: Record<string, string> = {};
-    for (const [d, text] of Object.entries(state.readings)) {
-      const mm = parseNum(text);
-      readings[d] = mm === null ? text : String(Math.round(mm * perMm * 2) / 2);
+    for (const { key, units } of OLDER_KEYS) {
+      const old = localStorage.getItem(key);
+      if (!old) continue;
+      const state = merge(JSON.parse(old));
+      const factor = SCALE_MAX / units(state.tab);
+      const readings: Record<string, string> = {};
+      for (const [d, text] of Object.entries(state.readings)) {
+        const n = parseNum(text);
+        readings[d] = n === null ? text : String(Math.round(n * factor * 2) / 2);
+      }
+      return { ...state, readings };
     }
-    return { ...state, readings };
+    return defaultState;
   } catch {
     return defaultState;
   }

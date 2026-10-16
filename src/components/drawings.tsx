@@ -1,6 +1,6 @@
 // Everything here is drawn in millimetres. On screen the SVGs scale to their
 // container; with `trueSize` they carry real mm dimensions so they print 1:1.
-// Crawls arrive in strip units (0–100 across the zone) and are placed with unitsToMm.
+// Crawls arrive in strip units (0–SCALE_MAX across the zone) and are placed with unitsToMm.
 import type { TabSpec } from '../state';
 import { SCALE_MAX, fmtMetres, unitsToMm, zoneLength } from '../state';
 import type { Mark, NearLabel } from '../model/marks';

@@ -12,7 +12,7 @@ export function tickStep(zoneMm: number, scaleMax: number): number {
   return [1, 2, 5, 10].find((s) => (s * zoneMm) / scaleMax >= MIN_TICK_MM - 1e-9) ?? 10;
 }
 
-/** Label step in strip units: every 10 where it fits, else every 20 or 50. */
+/** Label step in strip units: a labelled major line every 10 where it fits, else every 20 or 50. */
 export function labelStep(zoneMm: number, scaleMax: number): number {
   return [10, 20, 50].find((s) => (s * zoneMm) / scaleMax >= MIN_LABEL_MM - 1e-9) ?? 50;
 }

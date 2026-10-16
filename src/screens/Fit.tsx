@@ -1,6 +1,6 @@
 import { NextLink, Screen, Tip } from '../components/Screen';
 import { CrawlFit, FitResult, Reading, crawlAt, twinDistance } from '../model/fit';
-import { AppState, fmtMetres } from '../state';
+import { AppState, SCALE_MAX, fmtMetres } from '../state';
 
 const ACCENT = '#E0A100';
 
@@ -93,7 +93,7 @@ export function Fit({ state, result, readings }: { state: AppState; result: FitR
         </figcaption>
       </figure>
 
-      {fit.rms > 3 && <Tip tone="warn">The curve misses some readings by a few strip units. Check them for typos, or reshoot the odd one out.</Tip>}
+      {fit.rms > SCALE_MAX * 0.03 && <Tip tone="warn">The curve misses some readings by a few strip units. Check them for typos, or reshoot the odd one out.</Tip>}
       {fold === null && <Tip tone="warn">No turn-back found yet. Add readings at a few shorter distances and fit again.</Tip>}
 
       {pairs.length > 0 && (

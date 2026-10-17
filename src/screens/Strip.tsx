@@ -1,5 +1,5 @@
 import { NextLink, PrintButton, Screen } from '../components/Screen';
-import { ScaleBar, StripDrawing } from '../components/drawings';
+import { LogoImage, ScaleBar, StripDrawing } from '../components/drawings';
 import { AppState, SCALE_MAX, TabSpec, zoneLength } from '../state';
 import { tickStep } from '../model/strip';
 
@@ -30,6 +30,7 @@ export function Strip({ state }: { state: AppState }) {
         <div className="card strip-card">
           <div className="strip-preview"><StripDrawing tab={tab} /></div>
           <div className="strip-info">
+            <div className="strip-logo"><LogoImage width={45} /></div>
             <div>
               <h2 className="label-caps">Strip</h2>
               <p className="muted">{summary(tab)}</p>
@@ -46,7 +47,8 @@ export function Strip({ state }: { state: AppState }) {
       </Screen>
 
       <section className="print-only print-page">
-        <h1>Baremarks sight-in strip</h1>
+        <LogoImage width={45} trueSize />
+        <h1>Sight-in strip</h1>
         <p>{summary(tab)} · {scaleNote(tab)}</p>
         <div className="print-row">
           <StripDrawing tab={tab} trueSize />

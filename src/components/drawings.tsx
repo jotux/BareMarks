@@ -20,6 +20,16 @@ function TickLine({ style, long, minor, x0, w, y, strokeWidth }: {
   );
 }
 
+/** The logo on its own: `width` mm wide when printed, scaled to its container on screen. */
+export function LogoImage({ width, trueSize }: { width: number; trueSize?: boolean }) {
+  const h = logoHeight(width);
+  return (
+    <svg viewBox={`0 0 ${width} ${h}`} {...size(width, h, trueSize)} role="img" aria-label="Baremarks">
+      <Logo x={0} y={0} width={width} />
+    </svg>
+  );
+}
+
 /** A small sample of a style for the picker and legend: long, three short, long. */
 export function TickPreview({ style, width = 56, height = 34 }: { style: TickStyle; width?: number; height?: number }) {
   const rows = [true, false, false, false, true];
@@ -97,10 +107,6 @@ export function StripDrawing({ tab, trueSize }: { tab: TabSpec; trueSize?: boole
         </text>
       ))}
       <text x={w / 2} y={1.2} className="svg-sans" fontSize={2} fill="#4A5650" textAnchor="middle" dominantBaseline="hanging" letterSpacing={0.15}>TOP · NOCK SIDE</text>
-      {h - tab.zoneEnd >= 9 && (() => {
-        const lw = Math.min(20, w * 0.55);
-        return <Logo x={(w - lw) / 2} y={tab.zoneEnd + (h - tab.zoneEnd - logoHeight(lw)) * 0.35} width={lw} />;
-      })()}
     </svg>
   );
 }

@@ -145,6 +145,7 @@ h1, h2, p { margin: 0; }
 .strip-preview { width: 120px; flex-shrink: 0; }
 .strip-info { display: flex; flex-direction: column; gap: 14px; font-size: 13px; line-height: 1.45; min-width: 0; }
 .strip-info h2 { margin-bottom: 4px; }
+.strip-logo { width: 120px; }
 .steps { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; color: var(--ink-2); }
 svg.scaled { display: block; width: 100%; height: auto; }
 /* no fill here: CSS would override the fill attributes the drawings set per label */
@@ -236,6 +237,7 @@ figcaption span { display: flex; align-items: center; gap: 5px; }
   .no-print { display: none !important; }
   .print-only { display: block; }
   .print-page { font-family: var(--sans); color: #000000; font-size: 10pt; }
+  .print-page > svg:first-child { margin-bottom: 4mm; }
   .print-page h1 { font: 700 18pt var(--display); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 2mm; }
   .print-page h2 { font: 700 12pt var(--display); text-transform: uppercase; letter-spacing: 0.04em; margin: 6mm 0 2mm; }
   .print-row { display: flex; gap: 10mm; align-items: flex-start; margin-top: 4mm; }

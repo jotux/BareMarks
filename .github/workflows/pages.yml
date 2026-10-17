@@ -38,5 +38,8 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      # While the repo's Pages source is still "Deploy from a branch", GitHub also
+      # publishes the raw sources on every push; wait so this build lands last.
+      - run: sleep 60
       - id: deployment
         uses: actions/deploy-pages@v4

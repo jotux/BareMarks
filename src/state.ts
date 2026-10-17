@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { Reading } from './model/fit';
+import { DEFAULT_TICK_STYLE, TickStyle, isTickStyle } from './model/tickStyles';
 
 export type Hand = 'right' | 'left';
 
@@ -19,6 +20,7 @@ export interface AppState {
   /** raw text typed per distance, keyed by distance: strip units, 0 at the top of the zone, SCALE_MAX at the bottom */
   readings: Record<string, string>;
   minorMarks: number;
+  tickStyle: TickStyle;
 }
 
 export const MINOR_RANGE = { min: 1, max: 10 };
@@ -31,6 +33,7 @@ export const defaultState: AppState = {
   distances: [5, 10, 18, 25, 30, 40, 50],
   readings: {},
   minorMarks: 4,
+  tickStyle: DEFAULT_TICK_STYLE,
 };
 
 const STORAGE_KEY = 'baremarks:v3';
@@ -46,6 +49,7 @@ function merge(saved: Partial<AppState>): AppState {
     ...saved,
     tab: { ...defaultState.tab, ...saved.tab },
     readings: { ...saved.readings },
+    tickStyle: isTickStyle(saved.tickStyle) ? saved.tickStyle : DEFAULT_TICK_STYLE,
   };
 }
 

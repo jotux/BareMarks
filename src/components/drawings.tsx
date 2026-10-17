@@ -5,6 +5,35 @@ import type { TabSpec } from '../state';
 import { SCALE_MAX, fmtMetres, unitsToMm, zoneLength } from '../state';
 import type { Mark, NearLabel } from '../model/marks';
 import { stripTicks, tickStep } from '../model/strip';
+import { TickStyle, tickSegments } from '../model/tickStyles';
+
+/** One tab line in the chosen style, spanning `w` from `x0`. */
+function TickLine({ style, long, minor, x0, w, y, strokeWidth }: {
+  style: TickStyle; long: boolean; minor: number; x0: number; w: number; y: number; strokeWidth: number;
+}) {
+  return (
+    <>
+      {tickSegments(style, long, minor).map(([a, b]) => (
+        <line key={a} x1={x0 + a * w} x2={x0 + b * w} y1={y} y2={y} stroke="#17201B" strokeWidth={strokeWidth} />
+      ))}
+    </>
+  );
+}
+
+/** A small sample of a style for the picker and legend: long, three short, long. */
+export function TickPreview({ style, width = 56, height = 34 }: { style: TickStyle; width?: number; height?: number }) {
+  const rows = [true, false, false, false, true];
+  const pad = 4;
+  return (
+    <svg viewBox={`0 0 ${width} ${height}`} width={width} height={height} aria-hidden="true" className="tick-preview">
+      <rect x="0.5" y="0.5" width={width - 1} height={height - 1} rx="4" fill="#FFFFFF" stroke="#C9CFC9" />
+      {rows.map((long, i) => (
+        <TickLine key={i} style={style} long={long} minor={long ? 0 : 4 - i} x0={pad} w={width - pad * 2}
+          y={pad + 1 + (i * (height - pad * 2 - 2)) / (rows.length - 1)} strokeWidth={1.5} />
+      ))}
+    </svg>
+  );
+}
 
 function size(w: number, h: number, trueSize?: boolean) {
   return trueSize ? { width: `${w}mm`, height: `${h}mm` } : { className: 'scaled' };
@@ -55,16 +84,14 @@ export function ScaleBar({ trueSize }: { trueSize?: boolean }) {
 }
 
 /** What gets copied onto the tab: plain lines only, two lengths. */
-export function TabTemplate({ tab, marks, trueSize }: { tab: TabSpec; marks: Mark[]; trueSize?: boolean }) {
+export function TabTemplate({ tab, marks, style, trueSize }: { tab: TabSpec; marks: Mark[]; style: TickStyle; trueSize?: boolean }) {
   const { faceWidth: w, faceLength: h } = tab;
   return (
     <svg viewBox={`0 0 ${w} ${h}`} {...size(w, h, trueSize)} role="img" aria-label={`Tab template with ${marks.length} lines`}>
       <path d={facePath(w, h)} {...CUT} />
-      {marks.map((m) => {
-        const inset = w * (m.long ? 0.14 : 0.34);
-        const y = unitsToMm(tab, m.crawl);
-        return <line key={m.id} x1={inset} x2={w - inset} y1={y} y2={y} stroke="#17201B" strokeWidth={0.35} />;
-      })}
+      {marks.map((m) => (
+        <TickLine key={m.id} style={style} long={m.long} minor={m.minor} x0={0} w={w} y={unitsToMm(tab, m.crawl)} strokeWidth={0.35} />
+      ))}
     </svg>
   );
 }
@@ -76,8 +103,9 @@ const GAP = 4;
 const LABEL_SPACING = 3.6;
 
 /** The numbered key card at 2×: near distances on the left, far ones on the right. */
-export function KeyCard({ tab, marks, near, foldCrawl, foldDistance, trueSize }: {
+export function KeyCard({ tab, marks, style, near, foldCrawl, foldDistance, trueSize }: {
   tab: TabSpec;
+  style: TickStyle;
   marks: Mark[];
   near: NearLabel[];
   foldCrawl: number | null;
@@ -123,10 +151,9 @@ export function KeyCard({ tab, marks, near, foldCrawl, foldDistance, trueSize }:
           </text>
         </>
       )}
-      {marks.map((m) => {
-        const inset = w * (m.long ? 0.1 : 0.32);
-        return <line key={m.id} x1={tabX + inset} x2={tabX + w - inset} y1={y(m.crawl)} y2={y(m.crawl)} stroke="#17201B" strokeWidth={m.long ? 0.6 : 0.4} />;
-      })}
+      {marks.map((m) => (
+        <TickLine key={m.id} style={style} long={m.long} minor={m.minor} x0={tabX} w={w} y={y(m.crawl)} strokeWidth={m.long ? 0.6 : 0.4} />
+      ))}
       {farLabels.map(({ m, y: yy }) => m.long ? (
         <g key={m.id}>
           <rect x={farX} y={yy - 2} width={9} height={4} rx={1.2} fill="#17201B" />

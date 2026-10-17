@@ -4,6 +4,8 @@ export interface Mark {
   distance: number;
   crawl: number;
   long: boolean;
+  /** 0 for a long line, k for the k-th short line above it */
+  minor: number;
   /** L3 for the third long line, L3·2 for the second short line above it */
   id: string;
 }
@@ -37,12 +39,12 @@ export function buildMarks(fit: CrawlFit, o: MarkOptions): Mark[] {
   const step = 5 / (o.minor + 1);
   const marks: Mark[] = [];
   majors.forEach((d, i) => {
-    marks.push({ distance: d, crawl: crawlAt(fit, d), long: true, id: `L${i + 1}` });
+    marks.push({ distance: d, crawl: crawlAt(fit, d), long: true, minor: 0, id: `L${i + 1}` });
     if (majors[i + 1] !== d + 5) return;
     for (let k = 1; k <= o.minor; k++) {
       const dk = d + k * step;
       const crawl = crawlAt(fit, dk);
-      if (inZone(crawl)) marks.push({ distance: dk, crawl, long: false, id: `L${i + 1}·${k}` });
+      if (inZone(crawl)) marks.push({ distance: dk, crawl, long: false, minor: k, id: `L${i + 1}·${k}` });
     }
   });
   return marks;

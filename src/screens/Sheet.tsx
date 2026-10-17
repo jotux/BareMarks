@@ -3,7 +3,17 @@ import { PrintButton, Screen, Tip } from '../components/Screen';
 import { KeyCard, TabTemplate } from '../components/drawings';
 import { FitResult, Reading, crawlAt } from '../model/fit';
 import { buildMarks, nearLabels } from '../model/marks';
+import { TickStyle, tickSegments } from '../model/tickStyles';
+import { TickStylePicker } from '../components/TickStylePicker';
 import { AppState, MINOR_RANGE, SCALE_MAX } from '../state';
+
+function LegendLine({ style, long }: { style: TickStyle; long: boolean }) {
+  return (
+    <svg width="32" height="4" viewBox="0 0 32 4" aria-hidden="true">
+      {tickSegments(style, long, 1).map(([a, b]) => <line key={a} x1={a * 32} x2={b * 32} y1="2" y2="2" stroke="#17201B" strokeWidth="1.5" />)}
+    </svg>
+  );
+}
 
 const RULES = [
   'Two line lengths only, same thickness and colour',
@@ -27,7 +37,7 @@ export function Sheet({ state, setState, result, readings }: {
   }
 
   const { fit } = result;
-  const { tab, minorMarks: minor } = state;
+  const { tab, minorMarks: minor, tickStyle } = state;
   const marks = buildMarks(fit, {
     minor,
     scaleMax: SCALE_MAX,
@@ -40,7 +50,7 @@ export function Sheet({ state, setState, result, readings }: {
     setState((s) => ({ ...s, minorMarks: Math.min(MINOR_RANGE.max, Math.max(MINOR_RANGE.min, n)) }));
   const step = 5 / (minor + 1);
   const keyCard = (trueSize?: boolean) => (
-    <KeyCard tab={tab} marks={marks} near={near} foldCrawl={foldCrawl} foldDistance={fit.fold} trueSize={trueSize} />
+    <KeyCard tab={tab} marks={marks} style={tickStyle} near={near} foldCrawl={foldCrawl} foldDistance={fit.fold} trueSize={trueSize} />
   );
 
   return (
@@ -67,17 +77,22 @@ export function Sheet({ state, setState, result, readings }: {
           </div>
         </div>
 
+        <div className="card stepper">
+          <div className="stepper-label">Tick style</div>
+          <TickStylePicker value={tickStyle} onChange={(s) => setState((st) => ({ ...st, tickStyle: s }))} />
+        </div>
+
         {marks.length === 0 ? (
           <Tip tone="warn">None of the 5 m lines fall inside your marking zone. Check the zone on the first screen.</Tip>
         ) : (
           <>
             <section className="card template-card">
-              <div className="template-preview"><TabTemplate tab={tab} marks={marks} /></div>
+              <div className="template-preview"><TabTemplate tab={tab} marks={marks} style={tickStyle} /></div>
               <div className="template-info">
                 <h2 className="label-caps">Tab face · 1:1</h2>
                 <div className="legend">
-                  <span><span className="legend-long" />Long line, every 5 m</span>
-                  <span><span className="legend-short" />Short line, {minor} per gap</span>
+                  <span><LegendLine style={tickStyle} long />Long line, every 5 m</span>
+                  <span><LegendLine style={tickStyle} long={false} />Short line, {minor} per gap</span>
                 </div>
                 <p className="muted">Cut out, hold against the tab and transfer each line with a fine pen. Nothing else goes on the tab.</p>
               </div>
@@ -111,7 +126,7 @@ export function Sheet({ state, setState, result, readings }: {
         <div className="print-row">
           <div>
             <h2>Tab template · 1:1</h2>
-            <TabTemplate tab={tab} marks={marks} trueSize />
+            <TabTemplate tab={tab} marks={marks} style={tickStyle} trueSize />
           </div>
           <div className="print-notes">
             <p>Cut out the template, hold it against the tab and transfer each line with a fine pen. Nothing else goes on the tab.</p>

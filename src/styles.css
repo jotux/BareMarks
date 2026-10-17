@@ -147,8 +147,9 @@ h1, h2, p { margin: 0; }
 .strip-info h2 { margin-bottom: 4px; }
 .steps { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; color: var(--ink-2); }
 svg.scaled { display: block; width: 100%; height: auto; }
-.svg-mono { font-family: var(--mono); fill: var(--ink); }
-.svg-sans { font-family: var(--sans); fill: var(--ink); }
+/* no fill here: CSS would override the fill attributes the drawings set per label */
+.svg-mono { font-family: var(--mono); }
+.svg-sans { font-family: var(--sans); }
 
 /* ---------- readings ---------- */
 
@@ -193,9 +194,28 @@ figcaption span { display: flex; align-items: center; gap: 5px; }
 .template-info { flex: 1; display: flex; flex-direction: column; gap: 10px; font-size: 13px; line-height: 1.4; min-width: 0; }
 .legend { display: flex; flex-direction: column; gap: 6px; color: var(--ink-2); }
 .legend > span { display: flex; align-items: center; gap: 8px; }
-.legend-long, .legend-short { display: inline-block; height: 1.5px; background: var(--ink); }
-.legend-long { width: 28px; }
-.legend-short { width: 12px; margin: 0 8px; }
+.picker { position: relative; flex: 1; max-width: 230px; }
+.picker-button {
+  width: 100%; height: 52px; display: flex; align-items: center; gap: 10px; padding: 0 10px 0 8px;
+  border-radius: 10px; border: 1px solid var(--field-line); background: var(--surface-sunk); text-align: left;
+}
+.picker-button[aria-expanded='true'] { border-color: var(--teal); }
+.picker-button .picker-name { flex: 1; font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.picker-chevron { flex-shrink: 0; color: var(--muted); }
+.tick-preview { display: block; flex-shrink: 0; }
+.picker-list {
+  position: absolute; z-index: 20; top: calc(100% + 4px); right: 0; width: min(320px, calc(100vw - 40px));
+  margin: 0; padding: 4px; list-style: none; background: var(--surface);
+  border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 8px 24px rgba(23, 32, 27, 0.16);
+}
+.picker-list:focus { outline: none; }
+.picker-list:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
+.picker-option { display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 6px 8px; border-radius: 8px; cursor: pointer; }
+.picker-option.active { background: var(--teal-wash); }
+.picker-text { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.picker-option .picker-name { font-size: 14px; font-weight: 600; }
+.picker-desc { font-size: 12px; color: var(--muted); }
+.picker-check { flex-shrink: 0; color: var(--teal); }
 .keycard { display: flex; flex-direction: column; gap: 8px; padding: 14px; border: 2px solid var(--ink); }
 .keycard-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
 .rules { display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; border-radius: 12px; background: var(--teal-wash); }

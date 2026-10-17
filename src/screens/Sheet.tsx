@@ -94,7 +94,6 @@ export function Sheet({ state, setState, result, readings }: {
                   <span><LegendLine style={tickStyle} long />Long line, every 5 m</span>
                   <span><LegendLine style={tickStyle} long={false} />Short line, {minor} per gap</span>
                 </div>
-                <p className="muted">Cut out, hold against the tab and transfer each line with a fine pen. Nothing else goes on the tab.</p>
               </div>
             </section>
 
@@ -129,7 +128,6 @@ export function Sheet({ state, setState, result, readings }: {
             <TabTemplate tab={tab} marks={marks} style={tickStyle} trueSize />
           </div>
           <div className="print-notes">
-            <p>Cut out the template, hold it against the tab and transfer each line with a fine pen. Nothing else goes on the tab.</p>
             <p>Keep the key card in your quiver, not on the tab.</p>
           </div>
         </div>

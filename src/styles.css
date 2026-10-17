@@ -150,6 +150,7 @@ svg.scaled { display: block; width: 100%; height: auto; }
 /* no fill here: CSS would override the fill attributes the drawings set per label */
 .svg-mono { font-family: var(--mono); }
 .svg-sans { font-family: var(--sans); }
+.svg-display { font-family: var(--display); }
 
 /* ---------- readings ---------- */
 
@@ -217,6 +218,7 @@ figcaption span { display: flex; align-items: center; gap: 5px; }
 .picker-desc { font-size: 12px; color: var(--muted); }
 .picker-check { flex-shrink: 0; color: var(--teal); }
 .keycard { display: flex; flex-direction: column; gap: 8px; padding: 14px; border: 2px solid var(--ink); }
+.keycard-preview { width: 100%; max-width: 240px; margin: 0 auto; }
 .keycard-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
 .rules { display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; border-radius: 12px; background: var(--teal-wash); }
 .rules-head h2 { color: var(--teal-deep); }

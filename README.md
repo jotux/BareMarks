@@ -16,7 +16,7 @@ The app walks you through five steps:
 4. **Fit the curve.** Baremarks fits a curve through your readings and shows how well it matches them.
 5. **Get your marker sheet.** You get two things to print:
    - **A tab template at 1:1.** It has only plain lines: a long line every 5 m and a short line for each step in between (you pick how many). Hold it against the tab and copy the lines across with a fine pen.
-   - **A key card at 2×.** It has the same layout with every line numbered (L1, L2, L2·3 and so on) and the distance it stands for. The card stays in your quiver, not on the tab.
+   - **A key card the size of a US business card** (3.5 × 2 in). It shows the same line layout, stretched to fill the card's height, with every line numbered (L1, L2, L2·3 and so on) and the distance it stands for. It fits in a wallet or quiver pocket, not on the tab.
 
 ## The crawl model
 

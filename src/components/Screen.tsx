@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
 import { STEPS } from '../steps';
+// bump package.json "version" with each fix or feature; only this field is bundled
+import { version } from '../../package.json';
 
 function Wordmark() {
   const ticks = Array.from({ length: 21 }, (_, i) => i * 5);
@@ -52,7 +54,7 @@ export function Screen({ step, title, intro, children, footer }: ScreenProps) {
         )}
         {footer && <div className="footer-main">{footer}</div>}
       </footer>
-      <div className="version">Mobile-v{__APP_VERSION__}</div>
+      <div className="version">Mobile-v{version}</div>
     </div>
   );
 }

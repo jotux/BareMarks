@@ -49,6 +49,32 @@ function facePath(w: number, h: number) {
 
 const CUT = { fill: 'none', stroke: '#4A5650', strokeWidth: 0.3, strokeDasharray: '1.5 1' };
 
+/** Height of the logo (wordmark plus ruler) for a given width. */
+export const logoHeight = (width: number) => width * 0.3;
+
+/**
+ * The Baremarks wordmark with its ruler, drawn in mm with its top-left at (x, y).
+ * textLength pins the word to `width` so the ruler always lines up under it.
+ */
+export function Logo({ x, y, width }: { x: number; y: number; width: number }) {
+  const font = width / 4.3;
+  const rulerY = y + font * 0.95;
+  const rulerH = font * 0.28;
+  return (
+    <g aria-label="Baremarks">
+      <text x={x} y={y + font * 0.78} fontSize={font} className="svg-display" fontWeight={700}
+        textLength={width} lengthAdjust="spacingAndGlyphs" fill="#17201B">
+        BARE<tspan fill="#B07A00">MARKS</tspan>
+      </text>
+      <rect x={x} y={rulerY} width={width} height={rulerH * 0.23} fill="#B07A00" />
+      {Array.from({ length: 21 }, (_, i) => (
+        <rect key={i} x={x + Math.min(i * 5, 98.8) * width / 100} y={rulerY} width={width * 0.012}
+          height={rulerH * (i % 5 === 0 ? 1 : 0.57)} fill="#B07A00" />
+      ))}
+    </g>
+  );
+}
+
 export function StripDrawing({ tab, trueSize }: { tab: TabSpec; trueSize?: boolean }) {
   const { faceWidth: w, faceLength: h } = tab;
   const ticks = stripTicks(zoneLength(tab), SCALE_MAX);
@@ -71,6 +97,10 @@ export function StripDrawing({ tab, trueSize }: { tab: TabSpec; trueSize?: boole
         </text>
       ))}
       <text x={w / 2} y={1.2} className="svg-sans" fontSize={2} fill="#4A5650" textAnchor="middle" dominantBaseline="hanging" letterSpacing={0.15}>TOP · NOCK SIDE</text>
+      {h - tab.zoneEnd >= 9 && (() => {
+        const lw = Math.min(20, w * 0.55);
+        return <Logo x={(w - lw) / 2} y={tab.zoneEnd + (h - tab.zoneEnd - logoHeight(lw)) * 0.35} width={lw} />;
+      })()}
     </svg>
   );
 }
@@ -96,13 +126,25 @@ export function TabTemplate({ tab, marks, style, trueSize }: { tab: TabSpec; mar
   );
 }
 
-const KEY_SCALE = 2;
-const NEAR_COL = 30;
-const FAR_COL = 38;
-const GAP = 4;
-const LABEL_SPACING = 3.6;
+/** US business card, portrait: 2 × 3.5 in */
+export const CARD = { w: 50.8, h: 88.9 };
+const CARD_M = 3;
+const PLOT_TOP = 12.5;
+const PLOT_BOTTOM = CARD.h - 6;
+const NEAR_RIGHT = 14.5;
+const TAB_X = 15.5;
+const TAB_W = 15.5;
+const FAR_X = TAB_X + TAB_W + 1.3;
+const LABEL_SPACING = 2.6;
 
-/** The numbered key card at 2×: near distances on the left, far ones on the right. */
+/** Vertical scale of the key card relative to the real tab, chosen so the marking zone fills the card. */
+export const keyCardScale = (tab: TabSpec) => Math.min(3, (PLOT_BOTTOM - PLOT_TOP) / zoneLength(tab));
+
+/**
+ * The numbered key card, business-card size: near distances on the left, far
+ * ones on the right. Line spacing is proportional to the tab; the tab drawing
+ * itself is narrowed so the labels fit.
+ */
 export function KeyCard({ tab, marks, style, near, foldCrawl, foldDistance, trueSize }: {
   tab: TabSpec;
   style: TickStyle;
@@ -112,12 +154,8 @@ export function KeyCard({ tab, marks, style, near, foldCrawl, foldDistance, true
   foldDistance: number | null;
   trueSize?: boolean;
 }) {
-  const w = tab.faceWidth * KEY_SCALE;
-  const h = tab.faceLength * KEY_SCALE;
-  const tabX = NEAR_COL + GAP;
-  const farX = tabX + w + GAP;
-  const width = farX + FAR_COL;
-  const y = (crawl: number) => unitsToMm(tab, crawl) * KEY_SCALE;
+  const scale = keyCardScale(tab);
+  const y = (crawl: number) => PLOT_TOP + (crawl / SCALE_MAX) * zoneLength(tab) * scale;
 
   // label every long line; short lines only where there is room
   const farPlaced: number[] = [];
@@ -139,41 +177,44 @@ export function KeyCard({ tab, marks, style, near, foldCrawl, foldDistance, true
   });
 
   return (
-    <svg viewBox={`0 0 ${width} ${h}`} {...size(width, h, trueSize)} role="img" aria-label="Key card: each tab line with its distance">
-      <g transform={`translate(${tabX} 0)`}>
-        <path d={facePath(w, h)} fill="none" stroke="#8A948E" strokeWidth={0.4} strokeDasharray="2 1.5" />
-      </g>
+    <svg viewBox={`0 0 ${CARD.w} ${CARD.h}`} {...size(CARD.w, CARD.h, trueSize)} role="img" aria-label="Key card: each tab line with its distance">
+      <rect x={0.15} y={0.15} width={CARD.w - 0.3} height={CARD.h - 0.3} {...CUT} />
+      <Logo x={CARD_M} y={CARD_M} width={19} />
+      <text x={CARD.w - CARD_M} y={CARD_M + 2} className="svg-sans" fontSize={1.9} fontWeight={700} letterSpacing={0.25} fill="#17201B" textAnchor="end">KEY CARD</text>
+      <text x={CARD.w - CARD_M} y={CARD_M + 4.6} className="svg-mono" fontSize={1.5} fill="#4A5650" textAnchor="end">{scale.toFixed(1)}× tall</text>
+      <rect x={TAB_X} y={PLOT_TOP - 1.5} width={TAB_W} height={y(SCALE_MAX) - PLOT_TOP + 3} rx={1} fill="none" stroke="#8A948E" strokeWidth={0.25} strokeDasharray="1 0.8" />
       {foldCrawl !== null && (
         <>
-          <line x1={tabX + 2} x2={tabX + w - 2} y1={y(foldCrawl)} y2={y(foldCrawl)} stroke="#9A3412" strokeWidth={0.4} strokeDasharray="1.5 1" />
-          <text x={NEAR_COL} y={y(foldCrawl)} className="svg-sans" fontSize={2.2} fontWeight={600} fill="#9A3412" textAnchor="end" dominantBaseline="central">
+          <line x1={TAB_X + 0.8} x2={TAB_X + TAB_W - 0.8} y1={y(foldCrawl)} y2={y(foldCrawl)} stroke="#9A3412" strokeWidth={0.25} strokeDasharray="1 0.6" />
+          <text x={NEAR_RIGHT} y={y(foldCrawl)} className="svg-sans" fontSize={1.5} fontWeight={600} fill="#9A3412" textAnchor="end" dominantBaseline="central">
             FOLD {foldDistance?.toFixed(0)} m
           </text>
         </>
       )}
       {marks.map((m) => (
-        <TickLine key={m.id} style={style} long={m.long} minor={m.minor} x0={tabX} w={w} y={y(m.crawl)} strokeWidth={m.long ? 0.6 : 0.4} />
+        <TickLine key={m.id} style={style} long={m.long} minor={m.minor} x0={TAB_X} w={TAB_W} y={y(m.crawl)} strokeWidth={m.long ? 0.4 : 0.25} />
       ))}
       {farLabels.map(({ m, y: yy }) => m.long ? (
         <g key={m.id}>
-          <rect x={farX} y={yy - 2} width={9} height={4} rx={1.2} fill="#17201B" />
-          <text x={farX + 4.5} y={yy} className="svg-mono" fontSize={2.6} fontWeight={600} fill="#FFFFFF" textAnchor="middle" dominantBaseline="central">{m.id}</text>
-          <text x={farX + 11} y={yy} className="svg-mono" fontSize={3} fontWeight={600} fill="#0A3F3E" dominantBaseline="central">{fmtMetres(m.distance)}</text>
+          <rect x={FAR_X} y={yy - 1.3} width={6} height={2.6} rx={0.8} fill="#17201B" />
+          <text x={FAR_X + 3} y={yy} className="svg-mono" fontSize={1.8} fontWeight={600} fill="#FFFFFF" textAnchor="middle" dominantBaseline="central">{m.id}</text>
+          <text x={FAR_X + 7} y={yy} className="svg-mono" fontSize={2} fontWeight={600} fill="#0A3F3E" dominantBaseline="central">{fmtMetres(m.distance)}</text>
         </g>
       ) : (
-        <text key={m.id} x={farX + 2} y={yy} className="svg-mono" fontSize={2.2} fill="#4A5650" dominantBaseline="central">
-          ·{m.id.split('·')[1]}  {fmtMetres(m.distance)}
+        <text key={m.id} x={FAR_X + 1.2} y={yy} className="svg-mono" fontSize={1.5} fill="#4A5650" dominantBaseline="central">
+          ·{m.id.split('·')[1]} {fmtMetres(m.distance)}
         </text>
       ))}
       {nearShown.map((n) => (
         <g key={n.distance}>
-          <text x={NEAR_COL - 3} y={y(n.crawl)} className="svg-mono" dominantBaseline="central" textAnchor="end">
-            <tspan fontSize={3} fontWeight={600} fill="#9A3412">{fmtMetres(n.distance)}</tspan>
-            <tspan fontSize={2.2} fill="#4A5650" dx={1}>{n.exact ? '' : '≈'}{n.ref}</tspan>
+          <text x={NEAR_RIGHT - 1.4} y={y(n.crawl)} className="svg-mono" dominantBaseline="central" textAnchor="end">
+            <tspan fontSize={2} fontWeight={600} fill="#9A3412">{fmtMetres(n.distance)}</tspan>
+            <tspan fontSize={1.4} fill="#4A5650" dx={0.6}>{n.exact ? '' : '≈'}{n.ref}</tspan>
           </text>
-          <path d={`M ${NEAR_COL - 2} ${y(n.crawl) - 1} l 2 1 l -2 1 z`} fill="#9A3412" />
+          <path d={`M ${NEAR_RIGHT - 1} ${y(n.crawl) - 0.7} l 1.2 0.7 l -1.2 0.7 z`} fill="#9A3412" />
         </g>
       ))}
+      <text x={CARD.w / 2} y={CARD.h - 2.4} className="svg-mono" fontSize={1.4} fill="#4A5650" textAnchor="middle">L2·3 = 3rd short line above L2</text>
     </svg>
   );
 }

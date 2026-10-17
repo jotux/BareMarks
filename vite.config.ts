@@ -1,4 +1,3 @@
-import { readFileSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { defineConfig, type Plugin } from 'vite';
@@ -8,14 +7,6 @@ import { viteSingleFile } from 'vite-plugin-singlefile';
 // In dev, reload the whole page on every change instead of patching modules in place.
 const fullReload = (): Plugin => ({
   name: 'full-reload',
-  configureServer(server) {
-    // the version badge is baked in from package.json at startup, so restart when it changes
-    const pkg = path.resolve('package.json');
-    server.watcher.add(pkg);
-    server.watcher.on('change', (file) => {
-      if (path.resolve(file) === pkg) server.restart();
-    });
-  },
   handleHotUpdate({ server, modules, timestamp }) {
     // returning [] skips Vite's own invalidation, so drop the stale transforms first
     const seen = new Set<(typeof modules)[number]>();
@@ -25,14 +16,10 @@ const fullReload = (): Plugin => ({
   },
 });
 
-const { version } = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf-8')) as { version: string };
-
 // Builds to a single self-contained dist/index.html: scripts, styles and fonts
 // are all inlined, so the app runs offline from disk or any static host.
 export default defineConfig({
   plugins: [react(), viteSingleFile(), fullReload()],
-  // shown in the corner of every screen; bump package.json "version" with each fix or feature
-  define: { __APP_VERSION__: JSON.stringify(version) },
   // keep Vite's cache out of the project: Dropbox locks files mid-sync and breaks dep re-optimisation
   cacheDir: path.join(os.tmpdir(), 'baremarks-vite'),
   base: './',

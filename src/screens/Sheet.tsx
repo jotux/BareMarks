@@ -101,9 +101,9 @@ export function Sheet({ state, setState, result, readings }: {
             <section className="card keycard" aria-label="Key card">
               <div className="keycard-head">
                 <h2 className="label-caps">Key card</h2>
-                <span className="muted mono tiny">2× scale · L2·3 = 3rd short above L2</span>
+                <span className="muted mono tiny">US business card · 3.5 × 2 in</span>
               </div>
-              {keyCard()}
+              <div className="keycard-preview">{keyCard()}</div>
             </section>
           </>
         )}
@@ -133,7 +133,7 @@ export function Sheet({ state, setState, result, readings }: {
             <p>Keep the key card in your quiver, not on the tab.</p>
           </div>
         </div>
-        <h2>Key card · 2×</h2>
+        <h2>Key card · business card size</h2>
         {keyCard(true)}
       </section>
     </>
